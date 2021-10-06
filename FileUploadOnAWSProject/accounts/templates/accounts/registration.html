@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title>FileUploadOnAWS</title>
+   </head>
+   <body>
+      <h3>{% if request.user.is_anonymous == False %}Welcome {{request.user}}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'upload_posts_app_link:upload_posts' %}">  Create Posts</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'upload_posts_app_link:view_own_posts' %}">  My Posts</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'accounts_app_link:account_logout' %}">  Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;{% else %}<a href="{% url 'accounts_app_link:account_registration' %}">  Registration</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'accounts_app_link:account_login' %}">  Login</a>&nbsp;&nbsp;&nbsp;&nbsp; 
+         {% endif %}
+      </h3>
+      <br>
+      <br>
+      {% if messages %}
+      {% for message in messages %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+      {{message}}
+      {% endif %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+      {{message}}
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+      <!-- message Stop -->
+      <form method="POST" action="#">
+         {% csrf_token %}
+         <h3 class="signin">Create An Account</h3>
+         {{user_form.first_name}}<br><br>
+         {{user_form.last_name}}<br><br>
+         {{user_form.username}}<br><br>
+         {{user_form.email}}<br><br>
+         {{user_form.password1}}<br><br>
+         {{user_form.password2}}<br><br>
+         <button type="submit" class="btn btn-outline-dark sign-in">Sign Up</button>
+      </form>
+   </body>
+</html>

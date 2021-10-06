@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title>FileUploadOnAWS</title>
+      <style>
+         table {
+         font-family: arial, sans-serif;
+         border-collapse: collapse;
+         width: 100%;
+         }
+         td, th {
+         border: 1px solid #dddddd;
+         text-align: left;
+         padding: 8px;
+         }
+         tr:nth-child(even) {
+         background-color: #dddddd;
+         }
+         ul.pagination.justify-content-center {
+         padding: 0;
+         display: flex;
+         align-items: center;
+         justify-content: right;
+         }
+         span.span-number {
+         margin: 0 10px;
+         }
+         ul.pagination.justify-content-center li {
+         list-style: none;
+         margin: 0 10px;
+         }
+      </style>
+   </head>
+   <body>
+      <h3>{% if request.user.is_anonymous == False %}Welcome {{request.user}}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'upload_posts_app_link:upload_posts' %}">  Create Posts</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'upload_posts_app_link:view_own_posts' %}">  My Posts</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'accounts_app_link:account_logout' %}">  Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;{% else %}<a href="{% url 'accounts_app_link:account_registration' %}">  Registration</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'accounts_app_link:account_login' %}">  Login</a>&nbsp;&nbsp;&nbsp;&nbsp; 
+         {% endif %}
+      </h3>
+      <br>
+      <br>
+      {% if messages %}
+      {% for message in messages %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+      {{message}}
+      {% endif %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+      {{message}}
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+      <h2 style="text-align: center;">Posts Detail</h2>
+      <br>
+      <table>
+         <tr>
+            <th style="text-align: center;">S. No.</th>
+            <th style="text-align: center;">Name</th>
+            <th style="text-align: center;">Post Url</th>
+            <th style="text-align: center;">Image</th>
+         </tr>
+         {% for data in posts_data %}
+         <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{data.title}}</td>
+            <td style="text-align: center;"><a href="{{data.url}}">View Post</a></td>
+            <td style="text-align: center;">{% if data.file %}<img src="{{data.file.url}}"  style="width: 100px; height: 100px;">{% else %}No File{% endif %}</td>
+         </tr>
+         {% endfor %}
+      </table>
+      <nav aria-label="Page navigation " class="supplier-pagination">
+         {% if is_paginated %}
+         <ul class="pagination  justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a  class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="span-number">Previous</span></li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+            {% if page_obj.number == i %}
+            <li class="page-item active"><span class="span-number">{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+            <li><a  class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item"><a  class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% else %}
+            <li class="page-item disabled"><span class="span-number">Next</span></li>
+            {% endif %}
+         </ul>
+         {% endif %}
+      </nav>
+   </body>
+</html>
